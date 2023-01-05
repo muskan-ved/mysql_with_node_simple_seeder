@@ -1,6 +1,7 @@
+name: Deploy Node.js site on 85server
 on:
   push:
-    branches: [ master, Development ]
+    branches: [ master ]
 jobs:
   build:
     name: deploy
@@ -8,12 +9,25 @@ jobs:
     steps:
         - name: Checkout
           uses: actions/checkout@v2
-        - name: Deploy file
+          
+        - name: Detect package manager
+          id: detect-package-manager
+          run: |
+           npm install
+           
+        - name: Setup Node
+          uses: actions/setup-node@v3
+          with:
+            node-version: "16"
+            cache: ${{ steps.detect-package-manager.outputs.manager }}
+         
+        - name: Deploy file to server
           uses: wlixcc/SFTP-Deploy-Action@v1.2.4
           with:
             username: ${{ secrets.FTP_USERNAME }}
             server: ${{ secrets.FTP_SERVER }}
             port: ${{ secrets.FTP_PORT }}
-            remote_path: '/var/www/html/testing_pipeline'
+            password: ${{ secrets.FTP_PASSWORD }}
+            ssh_private_key: ${{ secrets.SSH_PUBLIC_KEY }}
+            remote_path: '/var/www/html/nodejs_pipeline'
             sftp_only: true
-            password: ${{ secrets.FTP_PASSWORD }}yyy
