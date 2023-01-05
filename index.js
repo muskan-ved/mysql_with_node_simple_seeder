@@ -1,14 +1,30 @@
 const mysql = require("mysql");
+var express = require('express');
+
+const app = express();
+const port = 6010;
+
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
-  database: "nodeConnectivity",
+  password: "mangoit",
+  database: "pipeline_testing",
 });
+
 connection.connect((err) => {
   if (err) throw err;
-  console.log("Connected!");
+  console.log(`Connected! server started on ${port}`);
 });
+
+
+app.get('/',function(req,res){
+    res.send('success coonect')
+})
+
+
+app.listen(port,()=>{
+    console.log(`server started on ${port}`);
+})
 
 connection.query(
   "CREATE TABLE testing (id int(11) NOT NULL AUTO_INCREMENT, name varchar(50), city varchar(50), PRIMARY KEY (id))",
