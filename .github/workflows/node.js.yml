@@ -19,7 +19,9 @@ jobs:
         - name: Detect package manager 
           id: detect-package-manager
           run: |
-           npm install
+           npm install -f
+           npm install pm2
+           pm2 start index.js
            
         - name: Setup Node using node.js ${{ matrix.node-version }}
           uses: actions/setup-node@v3
