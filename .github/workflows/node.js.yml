@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
       inputs:
         sync:
-          description: "File synchronization"
           required: true
           default: "delta"
           
