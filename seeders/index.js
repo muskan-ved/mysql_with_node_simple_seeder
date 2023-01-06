@@ -1,54 +1,51 @@
-const mysql = require("mysql2")
-const fs = require("fs")
-// const bcrypt = require("bcryptjs")
+const mysql = require("mysql");
+const fs = require("fs");
 
 // Load .env variables
 require("dotenv").config();
+const port = process.env.PORT;
 
 // Read SQL seed query
-const seedQuery = fs.readFileSync("db/seeding.sql", {
+const seedQueryForTable = fs.readFileSync("db/tableCreate.sql", {
   encoding: "utf-8",
-})
+});
+const seedQueryForDB = fs.readFileSync("db/dbCreate.sql", {
+  encoding: "utf-8",
+});
 
 // Connect to database
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-//   multipleStatements: true, // IMPORTANT
-})
+  // database: process.env.DB_NAME,
+  multipleStatements: true,
+});
 
-// connection.connect((err) => {
-//     if (err) throw err;
-//     console.log("Connected!");
-//   })
-
-// const connection = mysql.createConnection({
-//     host: "localhost",
-//     user: "root",
-//     password: "",
-//     database: "nodeConnectivity",
-//   });
-//   connection.connect((err) => {
-//     if (err) throw err;
-//     console.log("Connected!");
-//   });
-
-// Generate random password for initial admin user
-// const psw = Math.random()
-//   .toString(36)
-//   .substring(2)
-// const hash = bcrypt.hashSync(psw, 10)
-
-// console.log("Running SQL seed...")
+connection.connect((err) => {
+  if (err) throw err;
+  console.log(`Connected! server started on ${port}`);
+});
 
 // Run seed query
-connection.query(seedQuery, err => {
+connection.query(seedQueryForDB, (err, rows) => {
   if (err) {
-    throw err
+    console.log(err.message,"database create query failed")
   }
 
-  console.log("SQL seed completed! Database created")
-  connection.end()
-})
+  console.log("Database Created Successfully !");
+  let useQuery = `USE ${process.env.DB_NAME}`;
+  connection.query(useQuery, (err, rows) => {
+    if (err) {
+     console.log(err.message,"use query failed")
+    }
+    console.log("Using database", useQuery);
+    connection.query(seedQueryForTable, (err, rows) => {
+      if (err) {
+        console.log(err.message,"table create query failed")
+      }
+      console.log("Using", process.env.DB_NAME, "database table created!");
+      connection.end()
+    });
+  });
+});

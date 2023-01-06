@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "seed": "nodemon seeders/index.js"
+    "start": "node index.js",
+    "seed": "node seeders/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
+    "pm2": "5.2.2",
     "sequelize": "^6.28.0"
   },
   "devDependencies": {
