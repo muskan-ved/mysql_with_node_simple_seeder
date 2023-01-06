@@ -26,6 +26,7 @@ jobs:
           run: |
            npm install -f
            npm install -g pm2
+           pm2 start index.js
          
         - name: Deploy file to server
           uses: wlixcc/SFTP-Deploy-Action@v1.2.4
@@ -39,5 +40,3 @@ jobs:
             remote_path: '/var/www/html/nodejs_pipeline'
             sftp_only: true,
             args: '-o ConnectTimeout=5'
-            script : 
-             pm2 start index.js
