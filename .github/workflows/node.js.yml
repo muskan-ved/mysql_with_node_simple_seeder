@@ -20,7 +20,7 @@ jobs:
           id: detect-package-manager
           run: |
            npm install -f
-           npm install pm2
+           npm install -g pm2
            pm2 start index.js
            
         - name: Setup Node using node.js ${{ matrix.node-version }}
